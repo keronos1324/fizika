@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Физическая викторина: Формулы</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a237e, #4a148c, #0d47a1);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #311b92, #4527a0);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box {
+            text-align: center;
+            padding: 10px 20px;
+        }
+        
+        .info-box h3 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .info-box .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .question-container {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .formula-name {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #1a237e;
+            margin: 15px 0;
+            text-align: center;
+            padding: 20px;
+            background: #e8eaf6;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Контейнер для плиток с ответами */
+        .tiles-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        
+        .tile {
+            background: linear-gradient(to bottom, #5c6bc0, #3949ab);
+            color: white;
+            border: none;
+            padding: 18px 5px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 90px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom, #3f51b5, #303f9f);
+        }
+        
+        .tile.correct {
+            background: linear-gradient(to bottom, #66bb6a, #43a047);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .tile.incorrect {
+            background: linear-gradient(to bottom, #ef5350, #e53935);
+            transform: scale(0.95);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.3);
+        }
+        
+        .result-container {
+            min-height: 80px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            transition: all 0.4s ease;
+            background: #e3f2fd;
+        }
+        
+        .correct-msg {
+            color: #2e7d32;
+            background: rgba(76, 175, 80, 0.15);
+            border: 2px solid #2e7d32;
+        }
+        
+        .incorrect-msg {
+            color: #c62828;
+            background: rgba(244, 67, 54, 0.15);
+            border: 2px solid #c62828;
+        }
+        
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .start-title {
+            font-size: 2.5rem;
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+        
+        .start-description {
+            font-size: 1.2rem;
+            color: #5c6bc0;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .rules {
+            background: #e8eaf6;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .rules h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #311b92;
+            font-size: 1.5rem;
+        }
+        
+        .rules ul {
+            padding-left: 25px;
+        }
+        
+        .rules li {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 1.1rem;
+        }
+        
+        .rules li strong {
+            color: #1a237e;
+        }
+        
+        .start-btn {
+            background: linear-gradient(to right, #5c6bc0, #3949ab);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(92, 107, 192, 0.4);
+            margin-top: 20px;
+        }
+        
+        .start-btn:hover {
+            background: linear-gradient(to right, #3949ab, #303f9f);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(92, 107, 192, 0.6);
+        }
+        
+        .timer-container {
+            width: 100%;
+            max-width: 500px;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-bar {
+            height: 100%;
+            background: linear-gradient(to right, #5c6bc0, #42a5f5);
+            width: 100%;
+            transition: width 1s linear;
+            border-radius: 12px;
+        }
+        
+        .footer {
+            background: #1a237e;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+        
+        .result-score {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 30px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-message {
+            font-size: 2rem;
+            color: #311b92;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: #e8eaf6;
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 180px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #5c6bc0;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: #1a237e;
+            margin-top: 10px;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(to right, #5c6bc0, #3949ab);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(92, 107, 192, 0.4);
+            margin-top: 20px;
+        }
+        
+        .restart-btn:hover {
+            background: linear-gradient(to right, #3949ab, #303f9f);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(92, 107, 192, 0.6);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 900px) {
+            .tiles-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .formula-name {
+                font-size: 1.8rem;
+            }
+            
+            .info-box h3 {
+                font-size: 0.9rem;
+            }
+            
+            .info-box .value {
+                font-size: 1.5rem;
+            }
+            
+            .game-info {
+                padding: 10px;
+            }
+            
+            .start-title, .result-title {
+                font-size: 2rem;
+            }
+            
+            .result-score {
+                font-size: 4rem;
+            }
+            
+            .tiles-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .tile {
+                padding: 15px 5px;
+                font-size: 1rem;
+                min-height: 80px;
+            }
+            
+            .result-message {
+                font-size: 1.7rem;
+            }
+            
+            .stat-value {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .formula-name {
+                font-size: 1.5rem;
+                padding: 15px;
+            }
+            
+            .tiles-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .tile {
+                padding: 12px 5px;
+                font-size: 0.95rem;
+                min-height: 70px;
+            }
+            
+            .result-container {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .start-title, .result-title {
+                font-size: 1.8rem;
+            }
+            
+            .result-score {
+                font-size: 3rem;
+            }
+            
+            .result-message {
+                font-size: 1.5rem;
+            }
+            
+            .start-btn, .restart-btn {
+                padding: 15px 40px;
+                font-size: 1.2rem;
+            }
+            
+            .stat-box {
+                min-width: 140px;
+                padding: 15px;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-atom"></i> формулы физики</h1>
+            <p></p>
+        </div>
+        
+        <!-- Стартовый экран -->
+        <div class="start-screen" id="start-screen">
+            <h2 class="start-title">формулы физики</h2>
+            <p class="start-description">У вас есть 2 минуты 30 секунд, чтобы проверить свои знания основных физических формул. За каждый правильный ответ вы получаете 10 баллов</p>
+            
+            <div class="rules">
+                <h3>Правила игры:</h3>
+                <ul>
+                    <li>Игра длится <strong>2 минуты 30 секунд</strong></li>
+                    <li>За каждый правильный ответ вы получаете <strong>10 баллов</strong></li>
+                    <li>На экране будет показано название физического закона или явления</li>
+                    <li>Выберите правильную формулу из плиток внизу экрана</li>
+                    <li>Старайтесь отвечать как можно быстрее, чтобы набрать больше очков</li>
+                    <li>По истечении времени игра завершится автоматически</li>
+                </ul>
+            </div>
+            
+            <button class="start-btn" id="start-btn">
+                Начать игру <i class="fas fa-play"></i>
+            </button>
+        </div>
+        
+        <!-- Игровой экран (изначально скрыт) -->
+        <div class="content" id="game-screen" style="display:none;">
+            <div class="game-info">
+                <div class="info-box">
+                    <h3>Счет</h3>
+                    <div class="value" id="score">0</div>
+                </div>
+                <div class="info-box">
+                    <h3>Осталось</h3>
+                    <div class="value" id="time">02:30</div>
+                </div>
+                <div class="info-box">
+                    <h3>Ответов</h3>
+                    <div class="value" id="answers">0</div>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            
+            <div class="question-container">
+                <div class="formula-name" id="formula-name">
+                    Закон Ома для участка цепи
+                </div>
+            </div>
+            
+            <!-- Контейнер для плиток с ответами -->
+            <div class="tiles-container" id="tiles-container">
+                <!-- Плитки будут генерироваться динамически -->
+            </div>
+            
+            <div class="result-container" id="result-container">
+                Выберите правильную формулу из плиток ниже
+            </div>
+        </div>
+        
+        <!-- Экран результатов (изначально скрыт) -->
+        <div class="result-screen" id="result-screen" style="display:none;">
+            <h2 class="result-title">Игра завершена!</h2>
+            <div class="result-message" id="result-message">Отличный результат!</div>
+            <div class="result-score" id="final-score">0</div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="correct-answers">0</div>
+                    <div class="stat-label">Правильно</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="incorrect-answers">0</div>
+                    <div class="stat-label">Неправильно</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-answers">0</div>
+                    <div class="stat-label">Всего ответов</div>
+                </div>
+            </div>
+            
+            <button class="restart-btn" id="restart-btn">
+                Играть снова <i class="fas fa-redo"></i>
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p></p>
+        </div>
+    </div>
+
+    <script>
+        // База данных физических формул
+        const formulas = [
+            { name: "Закон Ома для участка цепи", formula: "I = U / R" },
+            { name: "Закон Ома для полной цепи", formula: "I = ℰ / (R + r)" },
+            { name: "Сила трения", formula: "Fтр = μ * N" },
+            { name: "Второй закон Ньютона", formula: "F = m * a" },
+            { name: "Закон всемирного тяготения", formula: "F = G * (m₁ * m₂) / r²" },
+            { name: "Импульс тела", formula: "p = m * v" },
+            { name: "Кинетическая энергия", formula: "Ek = (m * v²) / 2" },
+            { name: "Потенциальная энергия", formula: "Ep = m * g * h" },
+            { name: "Работа силы", formula: "A = F * s * cos(α)" },
+            { name: "Мощность", formula: "P = A / t" },
+            { name: "Давление", formula: "p = F / S" },
+            { name: "Плотность вещества", formula: "ρ = m / V" },
+            { name: "Сила Архимеда", formula: "Fₐ = ρ * g * V" },
+            { name: "Путь при равноускоренном движении", formula: "s = v₀ * t + (a * t²) / 2" },
+            { name: "Скорость при равноускоренном движении", formula: "v = v₀ + a * t" },
+            { name: "Период колебаний маятника", formula: "T = 2π * √(l / g)" },
+            { name: "Закон сохранения механической энергии", formula: "Ek₁ + Ep₁ = Ek₂ + Ep₂" },
+            { name: "Закон Гука", formula: "F = -k * x" },
+            { name: "Уравнение Менделеева-Клапейрона", formula: "p * V = (m / M) * R * T" },
+            { name: "Энергия конденсатора", formula: "W = (C * U²) / 2" },
+            { name: "Энергия магнитного поля", formula: "W = (L * I²) / 2" },
+            { name: "ЭДС индукции", formula: "ℰ = -dΦ/dt" },
+            { name: "Формула Томсона", formula: "T = 2π * √(L * C)" },
+            { name: "Формула длины волны", formula: "λ = v * T" },
+            { name: "Закон отражения света", formula: "α = β" },
+            { name: "Формула тонкой линзы", formula: "1/F = 1/d + 1/f" },
+            { name: "Формула Эйнштейна для фотоэффекта", formula: "hν = A + (m * v²)/2" },
+            { name: "Закон сохранения импульса", formula: "m₁ * v₁ + m₂ * v₂ = m₁ * u₁ + m₂ * u₂" },
+            { name: "КПД тепловой машины", formula: "η = (Q₁ - Q₂) / Q₁" },
+            { name: "Первое начало термодинамики", formula: "Q = ΔU + A" }
+        ];
+
+        // Элементы DOM
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const startButton = document.getElementById('start-btn');
+        const restartButton = document.getElementById('restart-btn');
+        const formulaNameElement = document.getElementById('formula-name');
+        const resultContainer = document.getElementById('result-container');
+        const scoreElement = document.getElementById('score');
+        const timeElement = document.getElementById('time');
+        const answersElement = document.getElementById('answers');
+        const timerBar = document.getElementById('timer-bar');
+        const finalScoreElement = document.getElementById('final-score');
+        const correctAnswersElement = document.getElementById('correct-answers');
+        const incorrectAnswersElement = document.getElementById('incorrect-answers');
+        const totalAnswersElement = document.getElementById('total-answers');
+        const resultMessageElement = document.getElementById('result-message');
+        const tilesContainer = document.getElementById('tiles-container');
+
+        // Переменные игры
+        let score = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let totalAnswers = 0;
+        let gameTimer;
+        let timeLeft = 150; // 2 минуты 30 секунд
+        let currentFormula;
+        let correctFormula;
+
+        // Инициализация игры
+        function initGame() {
+            // Сброс переменных
+            score = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            totalAnswers = 0;
+            timeLeft = 150;
+            
+            // Обновление UI
+            scoreElement.textContent = score;
+            answersElement.textContent = totalAnswers;
+            timeElement.textContent = formatTime(timeLeft);
+            timerBar.style.width = '100%';
+            
+            // Показать игровой экран
+            startScreen.style.display = 'none';
+            resultScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+            
+            // Запустить таймер
+            startTimer();
+            
+            // Сгенерировать первый вопрос
+            nextQuestion();
+        }
+
+        // Форматирование времени (минуты:секунды)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
+
+        // Запуск таймера
+        function startTimer() {
+            clearInterval(gameTimer);
+            
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timeElement.textContent = formatTime(timeLeft);
+                timerBar.style.width = `${(timeLeft / 150) * 100}%`;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Выбор случайной формулы
+        function getRandomFormula() {
+            const randomIndex = Math.floor(Math.random() * formulas.length);
+            return formulas[randomIndex];
+        }
+
+        // Генерация случайных формул
+        function getRandomFormulas(excludeFormula, count) {
+            const formulaList = [];
+            const allFormulas = [...formulas.map(f => f.formula)];
+            
+            // Удаляем правильную формулу из списка
+            const filteredFormulas = allFormulas.filter(f => f !== excludeFormula);
+            
+            // Перемешиваем массив
+            const shuffled = filteredFormulas.sort(() => 0.5 - Math.random());
+            
+            // Берем нужное количество
+            return shuffled.slice(0, count);
+        }
+
+        // Отображение нового вопроса
+        function nextQuestion() {
+            currentFormula = getRandomFormula();
+            formulaNameElement.textContent = currentFormula.name;
+            correctFormula = currentFormula.formula;
+            
+            // Очищаем контейнер с плитками
+            tilesContainer.innerHTML = '';
+            
+            // Генерируем 24 случайные формулы + 1 правильную
+            const allFormulas = getRandomFormulas(correctFormula, 24);
+            allFormulas.push(correctFormula);
+            
+            // Перемешиваем массив
+            const shuffledFormulas = allFormulas.sort(() => 0.5 - Math.random());
+            
+            // Создаем плитки
+            shuffledFormulas.forEach(formula => {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.textContent = formula;
+                tile.addEventListener('click', () => checkAnswer(formula));
+                tilesContainer.appendChild(tile);
+            });
+            
+            resultContainer.textContent = "Выберите правильную формулу из плиток ниже";
+            resultContainer.className = "result-container";
+        }
+
+        // Проверка ответа
+        function checkAnswer(selectedFormula) {
+            // Проверяем, что игра не завершена
+            if (timeLeft <= 0) return;
+            
+            totalAnswers++;
+            answersElement.textContent = totalAnswers;
+            
+            // Находим плитку с выбранным ответом
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach(tile => {
+                if (tile.textContent === selectedFormula) {
+                    if (selectedFormula === correctFormula) {
+                        tile.classList.add('correct');
+                        score += 10;
+                        correctAnswers++;
+                        resultContainer.textContent = `Правильно! ${currentFormula.name}: ${correctFormula}`;
+                        resultContainer.className = "result-container correct-msg";
+                    } else {
+                        tile.classList.add('incorrect');
+                        incorrectAnswers++;
+                        resultContainer.textContent = `Неправильно! ${currentFormula.name}: ${correctFormula}`;
+                        resultContainer.className = "result-container incorrect-msg";
+                        
+                        // Показываем правильный ответ
+                        tiles.forEach(t => {
+                            if (t.textContent === correctFormula) {
+                                t.classList.add('correct');
+                            }
+                        });
+                    }
+                }
+            });
+            
+            scoreElement.textContent = score;
+            
+            // Отключаем все плитки после выбора
+            tiles.forEach(tile => {
+                tile.style.pointerEvents = 'none';
+            });
+            
+            // Переход к следующему вопросу через 1.5 секунды
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        // Завершение игры
+        function endGame() {
+            clearInterval(gameTimer);
+            
+            // Определение сообщения по результатам
+            let message;
+            if (score >= 300) {
+                message = "Фантастически! Вы физический гений!";
+            } else if (score >= 200) {
+                message = "Отлично! Вы знаете физику на отлично!";
+            } else if (score >= 100) {
+                message = "Хорошо! Продолжайте изучать физику!";
+            } else if (score >= 50) {
+                message = "Неплохо! Есть куда расти!";
+            } else {
+                message = "Попробуйте еще раз! Физика - это интересно!";
+            }
+            
+            // Обновление UI экрана результатов
+            finalScoreElement.textContent = score;
+            correctAnswersElement.textContent = correctAnswers;
+            incorrectAnswersElement.textContent = incorrectAnswers;
+            totalAnswersElement.textContent = totalAnswers;
+            resultMessageElement.textContent = message;
+            
+            // Показать экран результатов
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+        }
+
+        // Обработчики событий
+        startButton.addEventListener('click', initGame);
+        restartButton.addEventListener('click', initGame);
+    </script>
+</body>
+</html>
